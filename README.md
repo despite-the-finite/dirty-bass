@@ -27,23 +27,38 @@ Each voice runs:
 | Sustain | 0–1 | Envelope sustain level |
 | Release | 1ms–4s | Envelope release time |
 
-## Building
+## Getting the plugin
 
-**Requirements:**
-- Windows 10+
-- Visual Studio 2022 (Desktop C++ workload)
-- CMake 3.22+
-- JUCE cloned somewhere on disk
+### Download a build
+
+Grab the zip for your platform from the
+[latest release](../../releases/latest) — that is the permanent download, and
+it does not ask you to sign in.
+
+Every push also builds all three platforms. For a build of something newer than
+the last release, open the [Actions](../../actions) tab, pick the most recent
+green run, and download the artefact for your platform (GitHub asks for a
+sign-in before it hands over a run artefact, and those expire; release assets
+do not).
+
+### Install it
+
+| Platform | Copy `Dirty Bass.vst3` to |
+|---|---|
+| Windows | `C:\Program Files\Common Files\VST3\` |
+| macOS | `~/Library/Audio/Plug-Ins/VST3/` |
+| Linux | `~/.vst3/` |
+
+Then rescan plugins in your DAW.
+
+## Building it yourself
+
+Needs CMake 3.22+ and a C++ compiler — Visual Studio 2022 (Desktop C++
+workload) on Windows. JUCE 8.0.4 is downloaded automatically at configure time.
 
 ```bash
-# Clone JUCE if you haven't already
-git clone https://github.com/juce-framework/JUCE.git C:/dev/oss/JUCE
-
-# Configure (update the JUCE path in CMakeLists.txt if yours differs)
-cmake -B build -A x64
-
-# Build
-cmake --build build --config Release
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release --parallel
 ```
 
 The VST3 bundle is output to:
@@ -51,7 +66,19 @@ The VST3 bundle is output to:
 build/DirtyBass_artefacts/Release/VST3/Dirty Bass.vst3
 ```
 
-Copy that folder to `C:\Program Files\Common Files\VST3\` and rescan plugins in your DAW.
+Already have JUCE checked out? Point at it and skip the download:
+
+```bash
+cmake -B build -DJUCE_PATH=C:/dev/oss/JUCE
+```
+
+On Linux you will also need:
+
+```bash
+sudo apt-get install libasound2-dev libfreetype-dev libfontconfig1-dev \
+  libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev \
+  libxcomposite-dev libxrender-dev libglu1-mesa-dev
+```
 
 ## License
 
